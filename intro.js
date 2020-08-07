@@ -65,7 +65,9 @@
       /* Precedence of positions, when auto is enabled */
       positionPrecedence: ["bottom", "top", "right", "left"],
       /* Disable an interaction with element? */
-      disableInteraction: false
+      disableInteraction: false,
+      /* Gap distance between tooltip and the target element */
+      gap: 0,
     };
   }
 
@@ -460,6 +462,8 @@
 
     tooltipLayer.className = ('introjs-tooltip ' + tooltipCssClass).replace(/^\s+|\s+$/g, '');
 
+    var gap = this._options.gap;
+
     currentTooltipPosition = this._introItems[this._currentStep].position;
     if ((currentTooltipPosition == "auto" || this._options.tooltipPosition == "auto")) {
       if (currentTooltipPosition != "floating") { // Floating is always valid, no point in calculating
@@ -478,7 +482,7 @@
         tooltipLayer.style.bottom = (targetOffset.height +  20) + 'px';
         break;
       case 'right':
-        tooltipLayer.style.left = (targetOffset.width + 20) + 'px';
+        tooltipLayer.style.left = (targetOffset.width + 20 + gap) + 'px';
         if (targetOffset.top + tooltipOffset.height > windowSize.height) {
           // In this case, right would have fallen below the bottom of the screen.
           // Modify so that the bottom of the tooltip connects with the target
@@ -501,7 +505,7 @@
         } else {
           arrowLayer.className = 'introjs-arrow right';
         }
-        tooltipLayer.style.right = (targetOffset.width + 20) + 'px';
+        tooltipLayer.style.right = (targetOffset.width + 20 + gap) + 'px';
 
         break;
       case 'floating':
@@ -547,7 +551,7 @@
 
         var tooltipLayerStyleLeft = 0;
         _checkRight(targetOffset, tooltipLayerStyleLeft, tooltipOffset, windowSize, tooltipLayer);
-        tooltipLayer.style.top    = (targetOffset.height +  20) + 'px';
+        tooltipLayer.style.top    = (targetOffset.height + 20 + gap) + 'px';
         break;
     }
   }
@@ -1155,15 +1159,17 @@
     //calculate element top and left
     var _x = 0;
     var _y = 0;
+    var defaultOffsetLeft = (element.defaultOffsetLeft ? element.defaultOffsetLeft : 0);
+    var defaultOffsetTop = (element.defaultOffsetTop ? element.defaultOffsetTop : 0);
     while (element && !isNaN(element.offsetLeft) && !isNaN(element.offsetTop)) {
       _x += element.offsetLeft;
       _y += element.offsetTop;
       element = element.offsetParent;
     }
     //set top
-    elementPosition.top = _y;
+    elementPosition.top = _y + defaultOffsetTop;
     //set left
-    elementPosition.left = _x;
+    elementPosition.left = _x + defaultOffsetLeft;
 
     return elementPosition;
   }
