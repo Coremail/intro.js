@@ -737,6 +737,12 @@
       highlightClass += (' ' + this._options.highlightClass);
     }
 
+    if (oldHelperLayer != null && this._currentStep == 0) {
+      //close other step
+      oldHelperLayer = null;
+      _exitIntro(this._targetElement);
+    }
+
     if (oldHelperLayer != null) {
       var oldHelperNumberLayer = oldReferenceLayer.querySelector('.introjs-helperNumberLayer'),
           oldtooltipLayer      = oldReferenceLayer.querySelector('.introjs-tooltiptext'),
